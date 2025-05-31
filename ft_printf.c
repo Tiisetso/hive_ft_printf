@@ -6,13 +6,38 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/05/12 09:57:59 by timurray         ###   ########.fr       */
+/*   Updated: 2025/05/31 17:44:00 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int ft_printf(const char *, ...)
+#include <stdarg.h>
+#include <stdio.h> //TODO Remove
+#include <unistd.h>
+
+int ft_printf(const char *s, ...)
 {
-	
+	va_list	args;
+	size_t	i;
+	size_t length;
+
+	i = 0;
+	length = 0;
+	va_start(args, s);
+	while(*(s + i))
+	{
+		if (s[i] == '%')
+			i++;
+		write(1, (s + i), 1);
+		i++;
+	}
+	va_end(args);
+	return(1);
+}
+
+int main (void)
+{
+	ft_printf("This is a number: %d and this is a string: %s");
+	return (0);
 }
 
 /* 
