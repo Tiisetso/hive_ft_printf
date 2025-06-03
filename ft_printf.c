@@ -6,13 +6,37 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/05/31 17:44:00 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:58:59 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdarg.h>
 #include <stdio.h> //TODO Remove
 #include <unistd.h>
+
+typedef int (*handler_func)(void *data);
+
+int char_handler(void *data)
+{
+	char c;
+	
+	c = *(char *)data;
+	return write(1, &c, 1);
+}
+typedef struct {
+	char key;
+	handler_func handler;
+} handler_entry;
+
+handler_entry handlers[] =
+{
+	{'c', char_handler}
+};
+
+handler_func get_handler(char key)
+{
+	return handlers[0].handler;
+}
 
 int ft_printf(const char *s, ...)
 {
@@ -23,22 +47,31 @@ int ft_printf(const char *s, ...)
 	i = 0;
 	length = 0;
 	va_start(args, s);
+	char c ='x';
+
+	length += get_handler('c')(&c);
 	while(*(s + i))
 	{
 		if (s[i] == '%')
+		{
 			i++;
-		write(1, (s + i), 1);
+		}
+		length += write(1, (s + i), 1);
 		i++;
 	}
 	va_end(args);
-	return(1);
+	return(length);
 }
 
 int main (void)
 {
-	ft_printf("This is a number: %d and this is a string: %s");
+
+	int count = ft_printf("This is a number: %d and this is a string: %s", 55,"test string");
+	printf("\nchar count: %i", count);
 	return (0);
 }
+
+
 
 /* 
 TODO • Do not implement the original printf()’s buffer management.
@@ -48,6 +81,7 @@ TODO • You must use the command ar to create your library.
 TODO • The use of the libtool command is strictly forbidden.
 TODO • libftprintf.a must be created at the root of your repository.
 TODO • You have to implement the following conversions:
+
 TODO • %c Prints a single character.
 TODO • %s Prints a string (as defined by the common C convention).
 TODO • %p The void * pointer argument has to be printed in hexadecimal format.
