@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/04 15:56:15 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/06 14:35:25 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,21 @@
 #include <stdio.h> //TODO Remove
 #include <unistd.h>
 
-typedef int (*handler_func)(void *data);
-typedef struct {
-	char key;
-	handler_func handler;
-} handler_entry;
-
-int char_handler(void *data)
+int char_handler(char c)
 {
-	char c;
-	
-	c = *(char *)data;
 	return write(1, &c, 1);
 }
 
-int str_handler(void *data)
+int str_handler(char *s)
 {
-	char *s;
 	int count;
-	
-	s = (char *)data;
+
 	count = 0;
 	while(*s)
 		count += write(1, s++, 1);
 	return count;
 }
 
-
-handler_entry handlers[] =
-{
-	{'c', char_handler},
-	{'s', str_handler},
-	{'%', char_handler}
-};
-
-handler_func get_handler(char key)
-{
-	size_t elements;
-	size_t index;
-	
-	index = 0;
-	elements = sizeof(handlers) / sizeof(handlers[0]);
-	while (index < elements)
-	{
-		if (handlers[index].key == key)
-			return handlers[index].handler;
-		index++;
-	}
-	return (NULL);
-}
 
 int ft_printf(const char *s, ...)
 {
@@ -71,21 +37,13 @@ int ft_printf(const char *s, ...)
 	size_t length;
 
 	i = 0;
-	length = 0;
-	char c ='x';
-	char *str = "\nhello, how are you?";
-	
-	length += get_handler('c')(&c);
-	length += get_handler('s')(str);
-	
+	length = 0;	
 	va_start(args, s);
 	while(*(s + i))
 	{
 		if (s[i] == '%')
 		{
-			i++;
 		}
-		length += write(1, (s + i), 1);
 		i++;
 	}
 	va_end(args);
@@ -94,7 +52,6 @@ int ft_printf(const char *s, ...)
 
 int main (void)
 {
-
 	int count = ft_printf("This is a number: %d and this is a string: %s", 55,"test string");
 	printf("\nchar count: %i", count);
 	return (0);
