@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/06 16:39:23 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/08 16:46:04 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,35 @@ int str_handler(char *s)
 	return (count);
 }
 
+int num_handler(long num, long base)
+{
+	int count;
+	
+	
+
+}
+
 int func_select(const char key, va_list arg)
 {
 	size_t length;
 
 	length = 0;
 	if(key == 'c')
-		return (char_handler(va_arg(arg, int)));
-	if(key == '%')
-		return (char_handler('%'));
-	if(key == 's')
-		return (str_handler(va_arg(arg, char *)));
+		length = char_handler(va_arg(arg, int));
+	else if(key == '%')
+		length = char_handler('%');
+	else if(key == 's')
+		length = str_handler(va_arg(arg, char *));
+	else if(key == 'd' || key == 'i')
+		length = 0;
+	else if(key == 'x' || key == 'X')
+		length = 0;
+	else if (key == 'u')
+		length = 0;
+	else if (key == 'p')
+		length = 0;
+	else
+		length = char_handler(key);
 	return (length);
 }
 
@@ -65,7 +83,8 @@ int ft_printf(const char *s, ...)
 int main (void)
 {
 	int count = ft_printf("This is a number: %c and this is a string: %s", 'c',"test string");
-	printf("\n\nchar count: %i", count);
+	printf("\n\nchar count: %i\n\n", count);
+	printf("%%");
 	return (0);
 }
 
@@ -80,18 +99,18 @@ TODO • The use of the libtool command is strictly forbidden.
 TODO • libftprintf.a must be created at the root of your repository.
 TODO • You have to implement the following conversions:
 
- • %c Prints a single character.
- • %s Prints a string (as defined by the common C convention).
 
 TODO • %p The void * pointer argument has to be printed in hexadecimal format.
 
 TODO • %d Prints a decimal (base 10) number.
 TODO • %i Prints an integer in base 10.
+
 TODO • %u Prints an unsigned decimal (base 10) number.
 
 TODO • %x Prints a number in hexadecimal (base 16) lowercase format.
 TODO • %X Prints a number in hexadecimal (base 16) uppercase format.
 
 TODO • %% Prints a percent sign
+
 TODO What about multiple %%% and percent at the end?
 */
