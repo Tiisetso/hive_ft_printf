@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/09 14:44:15 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/09 14:51:31 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ int num_handler(long num, char *s)
 
 int ptr_handler(unsigned long ptr)
 {
-	//TODO 0x
-	//check for 0?
 	if(ptr == 0)
 		str_handler("0x0");
 	else
@@ -117,8 +115,8 @@ int main (void)
 {
 	int i = 12;
 	char c = 'c';
-	int h = 32;
-	char *s = "moika";
+	int h = 33;
+	char *s = "hello world";
 
 	int count = ft_printf("\nchar: %c, int: %i, string: %s, hex: %x, ptr: %p", c, i, s, h, s);
 	printf("\nchar: %c, int: %i, string: %s, hex: %x, ptr: %p", c, i, s, h, s);
