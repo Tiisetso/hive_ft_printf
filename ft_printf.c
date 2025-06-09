@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/08 16:46:04 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/09 14:44:15 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,45 @@ int str_handler(char *s)
 	return (count);
 }
 
-int num_handler(long num, long base)
+int str_len(char *s)
+{
+	size_t	length;
+
+	length = 0;
+	while(*s++)
+		length += 1;
+	return (length);
+}
+
+int num_handler(long num, char *s)
 {
 	int count;
-	
-	
+	int base;
 
+	base = str_len(s);
+	if(num < 0)
+	{
+		write(1, "-", 1);
+		return (num_handler(-num, s) + 1);
+	}
+	else if (num < base)
+		return (write(1, &s[num], 1));
+	else
+	{
+		count = num_handler(num / base, s);
+		return (num_handler(num % base, s) + count);
+	}	
+}
+
+int ptr_handler(unsigned long ptr)
+{
+	//TODO 0x
+	//check for 0?
+	if(ptr == 0)
+		str_handler("0x0");
+	else
+		str_handler("0x");
+	return (num_handler(ptr,"0123456789abcdef"));
 }
 
 int func_select(const char key, va_list arg)
@@ -48,14 +81,14 @@ int func_select(const char key, va_list arg)
 		length = char_handler('%');
 	else if(key == 's')
 		length = str_handler(va_arg(arg, char *));
-	else if(key == 'd' || key == 'i')
-		length = 0;
-	else if(key == 'x' || key == 'X')
-		length = 0;
-	else if (key == 'u')
-		length = 0;
+	else if(key == 'd' || key == 'i' || key == 'u')
+		length = num_handler(va_arg(arg, int), "0123456789");
+	else if(key == 'x')
+		length = num_handler(va_arg(arg, int), "0123456789abcdef");
+	else if(key == 'X')
+		length = num_handler(va_arg(arg, int), "0123456789ABCDEF");
 	else if (key == 'p')
-		length = 0;
+		length = ptr_handler(va_arg(arg, unsigned long));
 	else
 		length = char_handler(key);
 	return (length);
@@ -82,35 +115,24 @@ int ft_printf(const char *s, ...)
 
 int main (void)
 {
-	int count = ft_printf("This is a number: %c and this is a string: %s", 'c',"test string");
-	printf("\n\nchar count: %i\n\n", count);
-	printf("%%");
+	int i = 12;
+	char c = 'c';
+	int h = 32;
+	char *s = "moika";
+
+	int count = ft_printf("\nchar: %c, int: %i, string: %s, hex: %x, ptr: %p", c, i, s, h, s);
+	printf("\nchar: %c, int: %i, string: %s, hex: %x, ptr: %p", c, i, s, h, s);
+	printf("\n\n------------------------\nchar count: %i\n", count);
 	return (0);
 }
 
 
 
 /* 
-TODO • Do not implement the original printf()’s buffer management.
-TODO • Your function has to handle the following conversions: cspdiuxX%
-TODO • Your implementation will be evaluated against the behavior of the original printf().
 TODO • You must use the command ar to create your library.
-TODO • The use of the libtool command is strictly forbidden.
 TODO • libftprintf.a must be created at the root of your repository.
-TODO • You have to implement the following conversions:
-
 
 TODO • %p The void * pointer argument has to be printed in hexadecimal format.
-
-TODO • %d Prints a decimal (base 10) number.
-TODO • %i Prints an integer in base 10.
-
-TODO • %u Prints an unsigned decimal (base 10) number.
-
-TODO • %x Prints a number in hexadecimal (base 16) lowercase format.
-TODO • %X Prints a number in hexadecimal (base 16) uppercase format.
-
-TODO • %% Prints a percent sign
 
 TODO What about multiple %%% and percent at the end?
 */
