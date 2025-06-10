@@ -6,67 +6,11 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/09 14:51:31 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/10 15:35:28 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
-#include <stdio.h> //TODO Remove
-#include <unistd.h>
-
-int char_handler(int c)
-{
-	return (write(1, &c, 1));
-}
-
-int str_handler(char *s)
-{
-	int count;
-
-	count = 0;
-	while(*s)
-		count += write(1, s++, 1);
-	return (count);
-}
-
-int str_len(char *s)
-{
-	size_t	length;
-
-	length = 0;
-	while(*s++)
-		length += 1;
-	return (length);
-}
-
-int num_handler(long num, char *s)
-{
-	int count;
-	int base;
-
-	base = str_len(s);
-	if(num < 0)
-	{
-		write(1, "-", 1);
-		return (num_handler(-num, s) + 1);
-	}
-	else if (num < base)
-		return (write(1, &s[num], 1));
-	else
-	{
-		count = num_handler(num / base, s);
-		return (num_handler(num % base, s) + count);
-	}	
-}
-
-int ptr_handler(unsigned long ptr)
-{
-	if(ptr == 0)
-		str_handler("0x0");
-	else
-		str_handler("0x");
-	return (num_handler(ptr,"0123456789abcdef"));
-}
+#include "ft_printf.h"
 
 int func_select(const char key, va_list arg)
 {
@@ -79,14 +23,16 @@ int func_select(const char key, va_list arg)
 		length = char_handler('%');
 	else if(key == 's')
 		length = str_handler(va_arg(arg, char *));
-	else if(key == 'd' || key == 'i' || key == 'u')
+	else if(key == 'd' || key == 'i')
 		length = num_handler(va_arg(arg, int), "0123456789");
+	else if(key == 'u')
+		length = unum_handler(va_arg(arg, unsigned int), "0123456789");
 	else if(key == 'x')
-		length = num_handler(va_arg(arg, int), "0123456789abcdef");
+		length = unum_handler(va_arg(arg, unsigned int), "0123456789abcdef");
 	else if(key == 'X')
-		length = num_handler(va_arg(arg, int), "0123456789ABCDEF");
+		length = unum_handler(va_arg(arg, unsigned int), "0123456789ABCDEF");
 	else if (key == 'p')
-		length = ptr_handler(va_arg(arg, unsigned long));
+		length = ptr_handler(va_arg(arg, unsigned long), "0123456789abcdef");
 	else
 		length = char_handler(key);
 	return (length);
@@ -111,26 +57,10 @@ int ft_printf(const char *s, ...)
 	return(length);
 }
 
-int main (void)
-{
-	int i = 12;
-	char c = 'c';
-	int h = 33;
-	char *s = "hello world";
-
-	int count = ft_printf("\nchar: %c, int: %i, string: %s, hex: %x, ptr: %p", c, i, s, h, s);
-	printf("\nchar: %c, int: %i, string: %s, hex: %x, ptr: %p", c, i, s, h, s);
-	printf("\n\n------------------------\nchar count: %i\n", count);
-	return (0);
-}
 
 
 
 /* 
-TODO • You must use the command ar to create your library.
-TODO • libftprintf.a must be created at the root of your repository.
-
-TODO • %p The void * pointer argument has to be printed in hexadecimal format.
-
+TODO What if write fails?
 TODO What about multiple %%% and percent at the end?
 */
