@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:47:01 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/10 15:57:07 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:06:05 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,8 @@ int ptr_handler(unsigned long ptr, char *s)
 	unsigned long base;
 
 	count = 0;
-	// if(ptr == 0)
-	// 	return (str_handler("0x0"));
 	if(!ptr)
-		return (write(1, "(nil)", 6));
+		return (write(1, "(nil)", 5));
 	else
 	{
 		count += str_handler("0x");
