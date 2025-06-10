@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:47:01 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/10 16:06:05 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:07:05 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,35 @@ int str_len(char *s)
 	return (length);
 }
 
+int	ft_putchar_fd(char c, int fd)
+{
+	return (write(fd, &c, 1));
+}
+
+int	ft_putstr_fd(char *s, int fd)
+{
+	int count;
+
+	count = 0;
+	while (*s)
+	{
+		count += ft_putchar_fd(*s, fd);
+		s++;
+	}
+	return (count);
+}
+
 int char_handler(int c)
 {
-	return (write(1, &c, 1));
+	return (ft_putchar_fd(c, 1));
 }
 
 int str_handler(char *s)
 {
-	int count;
-
 	if(!s)
-		return (write(1, "(null)", 6));
-	count = 0;
-	while(*s)
-		count += write(1, s++, 1);
-	return (count);
+		return (ft_putstr_fd("(null)", 1));
+	else
+		return (ft_putstr_fd(s, 1));
 }
 
 int num_handler(long num, char *s)
@@ -59,22 +73,7 @@ int num_handler(long num, char *s)
 	}	
 }
 
-int unum_handler(unsigned int num, char *s)
-{
-	int count;
-	unsigned int base;
-
-	base = (unsigned int)str_len(s);
-	if (num < base)
-		return (write(1, &s[num], 1));
-	else
-	{
-		count = unum_handler(num / base, s);
-		return (unum_handler(num % base, s) + count);
-	}	
-}
-
-int lnum_handler(unsigned long num, char *s)
+int unum_handler(unsigned long long num, char *s)
 {
 	int count;
 	unsigned long base;
@@ -84,8 +83,8 @@ int lnum_handler(unsigned long num, char *s)
 		return (write(1, &s[num], 1));
 	else
 	{
-		count = lnum_handler(num / base, s);
-		return (lnum_handler(num % base, s) + count);
+		count = unum_handler(num / base, s);
+		return (unum_handler(num % base, s) + count);
 	}	
 }
 
@@ -101,7 +100,7 @@ int ptr_handler(unsigned long ptr, char *s)
 	{
 		count += str_handler("0x");
 		base = (unsigned long)str_len(s);
-		count += lnum_handler(ptr, s);
+		count += unum_handler(ptr, s);
 		return (count);
 	}
 }

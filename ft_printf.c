@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/10 15:35:28 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:01:09 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,6 @@ int ft_printf(const char *s, ...)
 	va_end(args);
 	return(length);
 }
-
-
-
 
 /* 
 TODO What if write fails?
