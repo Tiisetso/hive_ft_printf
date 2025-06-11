@@ -6,15 +6,15 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:47:01 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/10 18:07:05 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/11 17:07:35 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int str_len(char *s)
+ssize_t str_len(char *s)
 {
-	int	length;
+	ssize_t	length;
 
 	length = 0;
 	while(*s++)
@@ -22,30 +22,40 @@ int str_len(char *s)
 	return (length);
 }
 
-int	ft_putchar_fd(char c, int fd)
+ssize_t	ft_putchar_fd(char c, int fd)
 {
-	return (write(fd, &c, 1));
+	ssize_t res;
+
+	res = (write(fd, &c, 1));
+	if (res == -1)
+		return (-1);
+	return (1);
 }
 
-int	ft_putstr_fd(char *s, int fd)
+ssize_t	ft_putstr_fd(char *s, int fd)
 {
-	int count;
+	ssize_t count;
+	ssize_t res;
 
 	count = 0;
+	res = 0;
 	while (*s)
 	{
-		count += ft_putchar_fd(*s, fd);
+		res = ft_putchar_fd(*s, fd);
+		if(res == -1)
+			return (-1);
+		count += res;
 		s++;
 	}
 	return (count);
 }
 
-int char_handler(int c)
+ssize_t char_handler(int c)
 {
 	return (ft_putchar_fd(c, 1));
 }
 
-int str_handler(char *s)
+ssize_t str_handler(char *s)
 {
 	if(!s)
 		return (ft_putstr_fd("(null)", 1));
@@ -53,54 +63,66 @@ int str_handler(char *s)
 		return (ft_putstr_fd(s, 1));
 }
 
-int num_handler(long num, char *s)
+ssize_t num_handler(long num, char *s)
 {
-	int count;
-	int base;
+	ssize_t count;
+	int base_length;
 
-	base = str_len(s);
+	base_length = str_len(s);
 	if(num < 0)
 	{
-		write(1, "-", 1);
+		// write(1, "-", 1);
+		if (ft_putchar_fd('-', 1) == -1)
+			return (-1);
 		return (num_handler(-num, s) + 1);
 	}
-	else if (num < base)
-		return (write(1, &s[num], 1));
+	else if (num < base_length)
+	{
+		if (ft_putchar_fd(s[num], 1) == -1)
+			return (-1);
+		// return (write(1, &s[num], 1));
+		return (1);
+	}
 	else
 	{
-		count = num_handler(num / base, s);
-		return (num_handler(num % base, s) + count);
+		count = num_handler(num / base_length, s);
+		return (num_handler(num % base_length, s) + count);
 	}	
 }
 
-int unum_handler(unsigned long long num, char *s)
+ssize_t unum_handler(unsigned long long num, char *s)
 {
-	int count;
-	unsigned long base;
+	ssize_t count;
+	unsigned long base_length;
 
-	base = (unsigned long)str_len(s);
-	if (num < base)
-		return (write(1, &s[num], 1));
+	base_length = (unsigned long)str_len(s);
+	if (num < base_length)
+	{
+		if (ft_putchar_fd(s[num], 1) == -1)
+			return (-1);
+		// return (write(1, &s[num], 1));
+		return (1);
+	}
 	else
 	{
-		count = unum_handler(num / base, s);
-		return (unum_handler(num % base, s) + count);
+		count = unum_handler(num / base_length, s);
+		return (unum_handler(num % base_length, s) + count);
 	}	
 }
 
-int ptr_handler(unsigned long ptr, char *s)
+ssize_t ptr_handler(void *ptr, char *s)
 {
-	int count;
+	ssize_t count;
 	unsigned long base;
 
 	count = 0;
 	if(!ptr)
-		return (write(1, "(nil)", 5));
+		return (ft_putstr_fd("(nil)", 1));
 	else
 	{
 		count += str_handler("0x");
 		base = (unsigned long)str_len(s);
-		count += unum_handler(ptr, s);
+		count += unum_handler((uintptr_t)ptr, s);
 		return (count);
 	}
 }

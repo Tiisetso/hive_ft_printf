@@ -6,15 +6,15 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/10 18:01:09 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/11 17:07:01 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int func_select(const char key, va_list arg)
+ssize_t func_select(const char key, va_list arg)
 {
-	size_t length;
+	ssize_t length;
 
 	length = 0;
 	if(key == 'c')
@@ -32,7 +32,7 @@ int func_select(const char key, va_list arg)
 	else if(key == 'X')
 		length = unum_handler(va_arg(arg, unsigned int), "0123456789ABCDEF");
 	else if (key == 'p')
-		length = ptr_handler(va_arg(arg, unsigned long), "0123456789abcdef");
+		length = ptr_handler(va_arg(arg, void *), "0123456789abcdef");
 	else
 		length = char_handler(key);
 	return (length);
@@ -41,23 +41,30 @@ int func_select(const char key, va_list arg)
 int ft_printf(const char *s, ...)
 {
 	va_list	args;
-	size_t length;
+	ssize_t length;
 
-	length = 0;	
+	length = 0;
+	if (!s)
+		return (-1);
 	va_start(args, s);
 	while(*s)
 	{
-		if (*s == '%')
+		if (*s == '%' && *(s + 1))
 			length += func_select(*++s, args);
 		else
 			length += write(1, s, 1);
 		s++;
 	}
 	va_end(args);
-	return(length);
+	return((int)length);
 }
 
 /* 
 TODO What if write fails?
 TODO What about multiple %%% and percent at the end?
+TODO ft_
+TODO Run more tests
+TODO pass va_list by reference
+TODO norminette
+
 */
