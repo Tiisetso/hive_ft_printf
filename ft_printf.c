@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/11 17:07:01 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/12 12:55:20 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,35 @@
 
 ssize_t func_select(const char key, va_list arg)
 {
-	ssize_t length;
+	ssize_t res;
 
-	length = 0;
+	res = 0;
 	if(key == 'c')
-		length = char_handler(va_arg(arg, int));
+		res = char_handler(va_arg(arg, int));
 	else if(key == '%')
-		length = char_handler('%');
+		res = char_handler('%');
 	else if(key == 's')
-		length = str_handler(va_arg(arg, char *));
+		res = str_handler(va_arg(arg, char *));
 	else if(key == 'd' || key == 'i')
-		length = num_handler(va_arg(arg, int), "0123456789");
+		res = num_handler(va_arg(arg, int), "0123456789");
 	else if(key == 'u')
-		length = unum_handler(va_arg(arg, unsigned int), "0123456789");
+		res = unum_handler(va_arg(arg, unsigned int), "0123456789");
 	else if(key == 'x')
-		length = unum_handler(va_arg(arg, unsigned int), "0123456789abcdef");
+		res = unum_handler(va_arg(arg, unsigned int), "0123456789abcdef");
 	else if(key == 'X')
-		length = unum_handler(va_arg(arg, unsigned int), "0123456789ABCDEF");
+		res = unum_handler(va_arg(arg, unsigned int), "0123456789ABCDEF");
 	else if (key == 'p')
-		length = ptr_handler(va_arg(arg, void *), "0123456789abcdef");
+		res = ptr_handler(va_arg(arg, void *), "0123456789abcdef");
 	else
-		length = char_handler(key);
-	return (length);
+		res = char_handler(key);
+	return (res);
 }
 
 int ft_printf(const char *s, ...)
 {
 	va_list	args;
 	ssize_t length;
+	int res;
 
 	length = 0;
 	if (!s)
@@ -50,9 +51,19 @@ int ft_printf(const char *s, ...)
 	while(*s)
 	{
 		if (*s == '%' && *(s + 1))
-			length += func_select(*++s, args);
+		{
+			res = func_select(*++s, args);
+			if (res == -1)
+				return (-1);
+			length += res;
+		}
 		else
-			length += write(1, s, 1);
+		{
+			res = ft_putchar_fd(*s, 1);
+			if (res == -1)
+				return (-1);
+			length += res;
+		}
 		s++;
 	}
 	va_end(args);
@@ -60,9 +71,9 @@ int ft_printf(const char *s, ...)
 }
 
 /* 
-TODO What if write fails?
+TODO shift error check in ft_printf
+
 TODO What about multiple %%% and percent at the end?
-TODO ft_
 TODO Run more tests
 TODO pass va_list by reference
 TODO norminette

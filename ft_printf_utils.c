@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:47:01 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/11 17:07:35 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:31:55 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ ssize_t str_handler(char *s)
 ssize_t num_handler(long num, char *s)
 {
 	ssize_t count;
+	ssize_t count2;
 	int base_length;
 
 	base_length = str_len(s);
 	if(num < 0)
 	{
-		// write(1, "-", 1);
 		if (ft_putchar_fd('-', 1) == -1)
 			return (-1);
 		return (num_handler(-num, s) + 1);
@@ -80,19 +80,22 @@ ssize_t num_handler(long num, char *s)
 	{
 		if (ft_putchar_fd(s[num], 1) == -1)
 			return (-1);
-		// return (write(1, &s[num], 1));
 		return (1);
 	}
 	else
 	{
 		count = num_handler(num / base_length, s);
-		return (num_handler(num % base_length, s) + count);
+		count2 = num_handler(num % base_length, s);
+		if ((count2 == -1) || (count == -1))
+			return (-1);
+		return (count2 + count);
 	}	
 }
 
 ssize_t unum_handler(unsigned long long num, char *s)
 {
 	ssize_t count;
+	ssize_t count2;
 	unsigned long base_length;
 
 	base_length = (unsigned long)str_len(s);
@@ -100,20 +103,22 @@ ssize_t unum_handler(unsigned long long num, char *s)
 	{
 		if (ft_putchar_fd(s[num], 1) == -1)
 			return (-1);
-		// return (write(1, &s[num], 1));
 		return (1);
 	}
 	else
 	{
 		count = unum_handler(num / base_length, s);
-		return (unum_handler(num % base_length, s) + count);
-	}	
+		count2 = unum_handler(num % base_length, s);
+		if ((count2 == -1) || (count == -1))
+			return (-1);
+		return (count2 + count);
+	}		
 }
 
 ssize_t ptr_handler(void *ptr, char *s)
 {
 	ssize_t count;
-	unsigned long base;
+	unsigned long base_length;
 
 	count = 0;
 	if(!ptr)
@@ -121,7 +126,7 @@ ssize_t ptr_handler(void *ptr, char *s)
 	else
 	{
 		count += str_handler("0x");
-		base = (unsigned long)str_len(s);
+		base_length = (unsigned long)str_len(s);
 		count += unum_handler((uintptr_t)ptr, s);
 		return (count);
 	}
