@@ -6,30 +6,30 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/12 14:27:10 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:14:45 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-ssize_t func_select(const char key, va_list *args)
+ssize_t	func_select(const char key, va_list *args)
 {
-	ssize_t res;
+	ssize_t	res;
 
 	res = 0;
-	if(key == 'c')
+	if (key == 'c')
 		res = char_handler(va_arg(*args, int));
-	else if(key == '%')
+	else if (key == '%')
 		res = char_handler('%');
-	else if(key == 's')
+	else if (key == 's')
 		res = str_handler(va_arg(*args, char *));
-	else if(key == 'd' || key == 'i')
+	else if (key == 'd' || key == 'i')
 		res = num_handler(va_arg(*args, int), "0123456789");
-	else if(key == 'u')
+	else if (key == 'u')
 		res = unum_handler(va_arg(*args, unsigned int), "0123456789");
-	else if(key == 'x')
+	else if (key == 'x')
 		res = unum_handler(va_arg(*args, unsigned int), "0123456789abcdef");
-	else if(key == 'X')
+	else if (key == 'X')
 		res = unum_handler(va_arg(*args, unsigned int), "0123456789ABCDEF");
 	else if (key == 'p')
 		res = ptr_handler(va_arg(*args, void *), "0123456789abcdef");
@@ -38,17 +38,17 @@ ssize_t func_select(const char key, va_list *args)
 	return (res);
 }
 
-int ft_printf(const char *s, ...)
+int	ft_printf(const char *s, ...)
 {
 	va_list	args;
-	ssize_t length;
-	int res;
+	ssize_t	length;
+	int		res;
 
 	length = 0;
 	if (!s)
 		return (-1);
 	va_start(args, s);
-	while(*s)
+	while (*s)
 	{
 		if (*s == '%' && *(s + 1))
 			res = func_select(*++s, &args);
@@ -63,12 +63,5 @@ int ft_printf(const char *s, ...)
 		s++;
 	}
 	va_end(args);
-	return((int)length);
+	return ((int)length);
 }
-
-/* 
-
-TODO Run more tests
-TODO norminette
-
-*/
