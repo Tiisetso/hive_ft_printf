@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:47:01 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/12 16:13:38 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/13 12:37:30 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ ssize_t	num_handler(const long num, const char *s)
 {
 	ssize_t	count;
 	ssize_t	count2;
-	int		base_length;
+	long	base_length;
 
-	base_length = ft_str_len(s);
+	base_length = (long)ft_str_len(s);
 	if (num < 0)
 	{
 		if (ft_putchar_fd('-', 1) == -1)
@@ -43,11 +43,11 @@ ssize_t	num_handler(const long num, const char *s)
 
 ssize_t	unum_handler(const unsigned long long num, const char *s)
 {
-	ssize_t			count;
-	ssize_t			count2;
-	unsigned long	base_length;
+	ssize_t				count;
+	ssize_t				count2;
+	unsigned long long	base_length;
 
-	base_length = (unsigned long)ft_str_len(s);
+	base_length = (unsigned long long)ft_str_len(s);
 	if (num < base_length)
 	{
 		if (ft_putchar_fd(s[num], 1) == -1)

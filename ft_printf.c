@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/13 09:20:34 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/13 12:06:48 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ ssize_t	func_select(const char key, va_list *args)
 	else if (key == 'p')
 		res = ptr_handler(va_arg(*args, void *), "0123456789abcdef");
 	else
-		res = char_handler(key);
+		res = -1;
 	return (res);
 }
 
