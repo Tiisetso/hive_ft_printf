@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:06:31 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/12 16:14:45 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/13 09:14:40 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_printf(const char *s, ...)
 	va_start(args, s);
 	while (*s)
 	{
-		if (*s == '%' && *(s + 1))
+		if ((*s == '%') && (*(s + 1) != '\0'))
 			res = func_select(*++s, &args);
 		else
 			res = ft_putchar_fd(*s, 1);

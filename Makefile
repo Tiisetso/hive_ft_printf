@@ -6,7 +6,7 @@
 #    By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/08 16:04:25 by timurray          #+#    #+#              #
-#    Updated: 2025/06/09 16:19:53 by timurray         ###   ########.fr        #
+#    Updated: 2025/06/12 16:23:45 by timurray         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 SOURCES =	ft_printf.c \
-			ft_printf_utils.c 
+			ft_printf_char_utils.c \
+			ft_printf_num_utils.c
 
 OBJECTS = $(SOURCES:.c=.o)
 

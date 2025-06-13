@@ -6,7 +6,7 @@
 /*   By: timurray <timurray@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:47:01 by timurray          #+#    #+#             */
-/*   Updated: 2025/06/12 16:18:35 by timurray         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:19:48 by timurray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ ssize_t	ft_str_len(const char *s)
 	return (length);
 }
 
-ssize_t	ft_putchar_fd(const char c, const int fd)
+int	ft_putchar_fd(const char c, const int fd)
 {
-	ssize_t	res;
+	int	res;
 
 	res = (write(fd, &c, 1));
 	if (res == -1)
@@ -50,7 +50,7 @@ ssize_t	ft_putstr_fd(const char *s, const int fd)
 	return (count);
 }
 
-ssize_t	char_handler(const int c)
+int	char_handler(const int c)
 {
 	return (ft_putchar_fd(c, 1));
 }
